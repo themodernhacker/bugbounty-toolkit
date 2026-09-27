@@ -65,9 +65,10 @@ censys configure ; aws configure ; nuclei -update-templates (first run)
 
 === STEP 7 — SKILLS LIBRARY (/work/kit/skills) ===
 Index: cat /work/kit/skills/README.md
-- claude-bughunter/  (83 hunt skills)  — core: hunt-xss, hunt-sqli, hunt-ssrf,
-  hunt-ssti, hunt-idor, hunt-lfi, hunt-xxe, hunt-csrf, hunt-open-redirect, etc.
-- agentic-bug-hunter/ (15) — web2-recon, web2-vuln-classes, graphql-audit, etc.
-- methodology/My Bug Hunting Methodology.md — full recon->exploit workflow.
-Load a skill: read its SKILL.md (e.g. cat /work/kit/skills/claude-bughunter/hunt-xss/SKILL.md)
-when the target class matches, and follow its checklist/payloads.
+- claude-bughunter/  (83)  — core hunt-* web-vuln skills
+- agentic-bug-hunter/ (15) — web2-recon, web2-vuln-classes, graphql-audit
+- yaklang-hack-skills/ (103) — offensive playbooks (xss/sqli/ssrf/ssti/xxe/idor/waf-bypass/AD/privesc)
+- useosint/ (29) — OSINT/recon (subdomains, dorking, leaks, whois)
+- anthropic-cybersecurity-skills/ (818) — comprehensive security library (offensive+DFIR+cloud)
+- methodology/My Bug Hunting Methodology.md — full recon->exploit workflow
+Load a skill: cat /work/kit/skills/<collection>/<skill>/SKILL.md when the target class matches.

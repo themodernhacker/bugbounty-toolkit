@@ -18,7 +18,7 @@ skills/
 ├── yaklang-hack-skills/           # offensive hacking playbooks (103)
 ├── useosint/                      # OSINT / recon (29)
 ├── anthropic-cybersecurity-skills/# comprehensive security library (818)
-├── h1-disclosed-skills/          # 64 skills distilled from disclosed H1 reports
+├── h1-disclosed-skills/          # 100 skills distilled from disclosed H1 reports
 ├── methodology/                   # My Bug Hunting Methodology.md
 └── README.md
 ```
@@ -68,11 +68,11 @@ abuse, privesc), DFIR/malware analysis, threat intel, cloud security, and compli
 See ATTACK_COVERAGE.md for the full map. Load the matching skill for the vuln class
 or environment you're testing.
 
-## h1-disclosed-skills/  (64 skills)  — distilled from disclosed H1 reports
+## h1-disclosed-skills/  (100 skills)  — distilled from disclosed H1 reports
 Novel techniques from real Critical/High/Medium disclosed reports across XSS, SSRF,
 SQLi, Open Redirect, XXE, CSRF, path-traversal, RCE, IDOR, ATO, GraphQL, cache, OAuth,
-race conditions, API, info-disclosure, high-value infrastructure, and recon. Full
-index: skills/h1-disclosed-skills/README.md
+race conditions, upload, DoS, clickjacking, 2FA, SSO/SAML, mobile, API, info-disclosure,
+high-value infrastructure, and recon. Full index: skills/h1-disclosed-skills/README.md
 
 ## methodology/
 `My Bug Hunting Methodology.md` — full recon→enum→exploit→report workflow

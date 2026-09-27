@@ -70,5 +70,6 @@ Index: cat /work/kit/skills/README.md
 - yaklang-hack-skills/ (103) — offensive playbooks (xss/sqli/ssrf/ssti/xxe/idor/waf-bypass/AD/privesc)
 - useosint/ (29) — OSINT/recon (subdomains, dorking, leaks, whois)
 - anthropic-cybersecurity-skills/ (818) — comprehensive security library (offensive+DFIR+cloud)
+- h1-disclosed-reports/ (29) — novel techniques from disclosed Critical/High/Medium H1 reports
 - methodology/My Bug Hunting Methodology.md — full recon->exploit workflow
 Load a skill: cat /work/kit/skills/<collection>/<skill>/SKILL.md when the target class matches.

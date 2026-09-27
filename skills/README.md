@@ -18,6 +18,7 @@ skills/
 ├── yaklang-hack-skills/           # offensive hacking playbooks (103)
 ├── useosint/                      # OSINT / recon (29)
 ├── anthropic-cybersecurity-skills/# comprehensive security library (818)
+├── h1-disclosed-reports/          # 29 skills distilled from disclosed H1 reports
 ├── methodology/                   # My Bug Hunting Methodology.md
 └── README.md
 ```
@@ -66,6 +67,18 @@ Large curated security library spanning offensive testing (blind-ssrf, web vulns
 abuse, privesc), DFIR/malware analysis, threat intel, cloud security, and compliance.
 See ATTACK_COVERAGE.md for the full map. Load the matching skill for the vuln class
 or environment you're testing.
+
+## h1-disclosed-reports/  (29 skills)  — distilled from disclosed H1 reports
+Novel techniques from real Critical/High/Medium disclosed reports: xss-cache-poisoning,
+xss-postmessage-dom, xss-location-hash, xss-config-injection, ssrf-to-rce-exchange,
+ssrf-full-response, ssrf-blind-link-preview, rce-npm-dependency-confusion,
+rce-git-flag-injection, rce-markup-options, idor-private-reports, idor-graphql-delete,
+ato-request-smuggling, ato-passwordless-signup, ato-leaked-cookie,
+business-logic-negative-quantity, business-logic-crypto-balance, smuggling-http2,
+cache-deception-pii, cache-poisoning-stored-xss, oauth-idn-homograph,
+oauth-token-leak-chain, ssti-smarty-rce, subdomain-takeover-auth-bypass,
+auth-bypass-partners, graphql-rce-sift, graphql-sqli, race-condition-giftcard,
+race-condition-2fa. See skills/h1-disclosed-reports/README.md for the full index.
 
 ## methodology/
 `My Bug Hunting Methodology.md` — full recon→enum→exploit→report workflow

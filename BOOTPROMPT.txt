@@ -55,9 +55,10 @@ censys configure ; aws configure ; nuclei -update-templates (first run)
 
 === STEP 6 — HOW TO WORK ===
 1. Confirm target is in-scope before touching it (I'll provide it).
-2. Recon chain: subfinder+assetfinder+amass+crt.sh -> httpx (live probe) ->
+2. Recon chain: subfinder+assetfinder+amass+crt.name -> httpx (live probe) ->
    nuclei (default templates) -> katana/gospider (crawl) -> gf+qsreplace (param
    mining) -> dalfox/kxss (XSS) + sqlmap (SQLi) on promising endpoints.
+   CT search via crt.name: curl -s "https://crt.name/v1/search?apex=<domain>" (returns newline-separated subdomains)
 3. Verify manually via Burp MCP Repeater/Scanner/Collaborator.
 4. Report: endpoint, HTTP req/res, severity, impact, fix. Track all hosts/endpoints.
 5. Save recon output under /work/<target>/ (re-save to GitHub if you want it to persist).

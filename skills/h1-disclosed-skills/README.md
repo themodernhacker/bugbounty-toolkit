@@ -6,7 +6,7 @@ Every `SKILL.md` names the original report (program, ID, severity, bounty, weakn
 explains the new lesson, how the bug works, how to hunt for it, payloads, tooling, and
 the fix. Sources: hackerone.com/hacktivity + reddelexc/hackerone-reports (data.csv).
 
-## Index (52 skills)
+## Index (64 skills)
 
 ### XSS (8)
 - `xss-cache-poisoning` — cache poisoning → **stored** XSS (PayPal #488147)
@@ -40,6 +40,21 @@ the fix. Sources: hackerone.com/hacktivity + reddelexc/hackerone-reports (data.c
 - `open-redirect-to-ato` — OR → account takeover (cs.money #905607)
 - `open-redirect-regex-bypass` — regex/domain-validation bypass → ATO (Khan Academy #3723458)
 - `open-redirect-oauth-code` — OR → OAuth code exposure (LY #3423013)
+
+### XXE (3)
+- `xxe-svg-upload` — XXE via SVG upload → SSRF (Zivver #897244)
+- `xxe-jpeg-xmp` — XXE via JPEG XMP metadata (Informatica #836877)
+- `xxe-blind-oob` — blind/OOB XXE via parameter entities (Uber #154096)
+
+### CSRF (3)
+- `csrf-graphql-get` — CSRF via GraphQL GET mutations (GitLab #1122408)
+- `csrf-oauth-nullbyte-state` — 1-click ATO via null-byte `state` bypass (Logitech #1046630)
+- `csrf-token-validation-bypass` — token validation bypasses (GitHub #1497169, Stripe #1483327)
+
+### Path Traversal / File Read (3)
+- `path-traversal-apache-41773` — Apache CVE-2021-41773 encoded traversal (IBB #1394916)
+- `lfi-html-injection-pdf` — HTML injection in PDF export → LFI (Visma #809819)
+- `path-traversal-to-rce` — path traversal → RCE via file write (GitLab #733072)
 
 ### IDOR (2)
 - `idor-private-reports` — object ID enumeration → private data (HackerOne #2487889)
@@ -88,6 +103,13 @@ the fix. Sources: hackerone.com/hacktivity + reddelexc/hackerone-reports (data.c
 - `exposed-kubernetes-api` — exposed kube-apiserver → cluster takeover (Snapchat #455645, $25k)
 - `exposed-jenkins` — open Jenkins → RCE/creds (Snapchat #231460, $15k)
 
+### API (2)
+- `api-undocumented-endpoints` — hidden endpoints/mutations (Shopify #981472, Uber #419655)
+- `api-apache-flink-rce` — Flink RCE via jar/plan API (Aiven #1418891)
+
+### Information Disclosure (1)
+- `info-disclosure-graphql` — sensitive data via GraphQL fields (HackerOne #489146)
+
 ### Recon (6)
 - `recon-exposed-git` — `.git`/`.svn`/`.env` exposure + dumping (Semrush #676212, GSA #268382)
 - `recon-js-source-secrets` — API keys in JS/source maps (Stripo #983331)
@@ -97,7 +119,6 @@ the fix. Sources: hackerone.com/hacktivity + reddelexc/hackerone-reports (data.c
 - `recon-http-fingerprint` — tech fingerprinting (httpx/whatweb/wafw00f)
 
 ## How to use
-Load the matching skill when a target feature matches (e.g. `ssrf-blind-link-preview`
-for a link-preview feature, `sqli-array-parameter` for multi-select filters,
-`recon-github-dorking` for source/credential recon). Each skill's "How to hunt for it"
-is a ready-to-run checklist.
+Load the matching skill when a target feature matches (e.g. `xxe-jpeg-xmp` for photo
+upload, `csrf-graphql-get` for GraphQL, `recon-github-dorking` for credential recon).
+Each skill's "How to hunt for it" is a ready-to-run checklist.

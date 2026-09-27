@@ -62,3 +62,13 @@ censys configure ; aws configure ; nuclei -update-templates (first run)
 3. Verify manually via Burp MCP Repeater/Scanner/Collaborator.
 4. Report: endpoint, HTTP req/res, severity, impact, fix. Track all hosts/endpoints.
 5. Save recon output under /work/<target>/ (re-save to GitHub if you want it to persist).
+
+=== STEP 7 — SKILLS LIBRARY (/work/kit/skills) ===
+Index: cat /work/kit/skills/README.md
+- claude-bughunter/  (83 hunt skills)  — core: hunt-xss, hunt-sqli, hunt-ssrf,
+  hunt-ssti, hunt-idor, hunt-lfi, hunt-xxe, hunt-csrf, hunt-open-redirect, etc.
+- agentic-bug-hunter/ (15) — web2-recon, web2-vuln-classes, graphql-audit, etc.
+- methodology/My Bug Hunting Methodology.md — full recon->exploit workflow.
+- agent-zero/ (7) — framework meta-skills, NOT for hunting.
+Load a skill: read its SKILL.md (e.g. cat /work/kit/skills/claude-bughunter/hunt-xss/SKILL.md)
+when the target class matches, and follow its checklist/payloads.

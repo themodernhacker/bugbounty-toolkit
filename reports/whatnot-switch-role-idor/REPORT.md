@@ -96,5 +96,8 @@ cannot be adopted without a verified membership.
 
 ## Supporting Material / References
 
+- `Step1.png` — Burp Repeater request: `POST /api/v1/auth/switch-role` with the attacker's own cookie (`sub=73582060` / `bugstestbyabhi@gmail.com`) and the victim `id=VXNlck5vZGU6MTAyNjEwMTQ=` (`coolkicks`).
+- `Step2.png` — Burp Repeater response: `HTTP/2 200 OK` + `Set-Cookie: __Secure-team-owner-id=VXNlck5vZGU6MTAyNjEwMTQ%3D; Max-Age=31536000000; Secure; HttpOnly; SameSite=lax` (attacker adopts top seller `coolkicks`).
 - JS: `/assets/client.*.js` — `fetch("/api/v1/auth/switch-role",{...})`; `TEAM_OWNER_ID_COOKIE` → `__Secure-team-owner-id`; seller GraphQL operations (`GetSellerLiveReadiness`, `GetSellerAnalyticsChart`, `GetSellerBreakDetails`, `SetSellerLiveReadinessState`).
+- PoC script `poc.py` (attached).
 - Raw HTTP capture of step 2 (200 + `__Secure-team-owner-id` set to victim) attached.

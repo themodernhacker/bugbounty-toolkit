@@ -14,7 +14,6 @@ for URL-fetch parameters, `hunt-idor` for object references, etc.
 skills/
 ├── claude-bughunter/      # core hunt library (83 skills)
 ├── agentic-bug-hunter/    # additional hunt/web2/web3 skills (15)
-├── agent-zero/            # agent framework meta-skills (7) — NOT hunting skills
 ├── methodology/           # My Bug Hunting Methodology.md (wadgamer10)
 └── README.md
 ```
@@ -38,9 +37,6 @@ argus, bb-methodology, bug-bounty, cicd-security, client-reverse, credential-att
 graphql-audit, meme-coin-audit, mobile-pentest, report-writing, security-arsenal,
 triage-validation, web2-recon, web2-vuln-classes, web3-audit.
 
-## agent-zero/  (7 skills — framework meta, not for hunting)
-a0-create-agent, a0-create-plugin, a0-development, a0-manage-plugin, build-skill,
-scheduled-tasks, setup-a0-cli. (For building/extending the agent-zero framework itself.)
 
 ## methodology/
 `My Bug Hunting Methodology.md` — full recon→enum→exploit→report workflow

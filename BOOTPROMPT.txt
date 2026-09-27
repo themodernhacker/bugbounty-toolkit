@@ -69,6 +69,5 @@ Index: cat /work/kit/skills/README.md
   hunt-ssti, hunt-idor, hunt-lfi, hunt-xxe, hunt-csrf, hunt-open-redirect, etc.
 - agentic-bug-hunter/ (15) — web2-recon, web2-vuln-classes, graphql-audit, etc.
 - methodology/My Bug Hunting Methodology.md — full recon->exploit workflow.
-- agent-zero/ (7) — framework meta-skills, NOT for hunting.
 Load a skill: read its SKILL.md (e.g. cat /work/kit/skills/claude-bughunter/hunt-xss/SKILL.md)
 when the target class matches, and follow its checklist/payloads.

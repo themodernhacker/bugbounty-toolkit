@@ -6,11 +6,10 @@ SQLi, IDOR, subdomain takeover, exposed secrets, etc.), and use the Burp MCP.
 Do NOT re-ask for permission unless I request a scope check. Never touch
 out-of-scope assets.
 
-=== STEP 0 — PULL MY TOOLKIT (durable, stored outside the container) ===
+=== STEP 0 — PULL MY TOOLKIT (durable, public repo, NO token needed) ===
 # /work is EPHEMERAL - it wipes on every new container. Restore from GitHub:
-git clone --depth 1 https://github.com/<USER>/<REPO>.git /work/kit 2>/dev/null || \
-  git clone --depth 1 https://<TOKEN>@github.com/<USER>/<REPO>.git /work/kit
-ls /work/kit   # expect setup.sh, TOOL_INVENTORY.md, BOOTPROMPT.txt
+git clone --depth 1 https://github.com/themodernhacker/bugbounty-toolkit.git /work/kit
+ls /work/kit   # expect setup.sh, TOOL_INVENTORY.md, BOOTPROMPT.txt, burp_client.py
 
 === STEP 1 — ENVIRONMENT SETUP ===
 export PATH="$PATH:/root/go/bin:/usr/local/go/bin:/opt/venv/bin:/root/.local/bin"
@@ -21,9 +20,9 @@ cat /work/kit/TOOL_INVENTORY.md  # full tool + path + wordlist inventory
 Host = 172.17.0.1:9876 (Docker gateway; NOT 127.0.0.1 - fails in container).
 Handshake: header `Host: localhost:9876` (else 403) + `Origin: http://localhost:9876`.
 GET / -> SSE `endpoint` event with `sessionId`; then POST /?sessionId=<id>.
-Client: python3 /work/burp_client.py <tool> [json_args]
-    python3 /work/burp_client.py tools/list
-    python3 /work/burp_client.py initialize
+Client: python3 /work/kit/burp_client.py <tool> [json_args]
+    python3 /work/kit/burp_client.py tools/list
+    python3 /work/kit/burp_client.py initialize
 Gotchas: encoding helpers take key `content`; HTTP/2 tools use `pseudoHeaders`+
 `headers`+`requestBody` with :method/:path/:scheme/:authority; collaborator
 `customData` max 16 alphanumeric chars. Use Repeater + Scanner + Collaborator
@@ -61,4 +60,4 @@ censys configure ; aws configure ; nuclei -update-templates (first run)
    mining) -> dalfox/kxss (XSS) + sqlmap (SQLi) on promising endpoints.
 3. Verify manually via Burp MCP Repeater/Scanner/Collaborator.
 4. Report: endpoint, HTTP req/res, severity, impact, fix. Track all hosts/endpoints.
-5. Save recon output under /work/<target>/ (note: re-save to GitHub if needed).
+5. Save recon output under /work/<target>/ (re-save to GitHub if you want it to persist).

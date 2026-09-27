@@ -4,9 +4,11 @@ Personal bug-bounty toolkit for the PentAGI security assistant. Stores the
 idempotent install script, full tool inventory, boot prompt, and the Burp MCP
 client so a fresh (ephemeral) container can be restored in one command.
 
+> Repo is **public** — clone with no token.
+
 ## Quick start (in any new PentAGI chat)
 ```bash
-git clone --depth 1 https://<TOKEN>@github.com/themodernhacker/bugbounty-toolkit.git /work/kit
+git clone --depth 1 https://github.com/themodernhacker/bugbounty-toolkit.git /work/kit
 export PATH="$PATH:/root/go/bin:/usr/local/go/bin:/opt/venv/bin:/root/.local/bin"
 bash /work/kit/setup.sh            # idempotent - skips installed tools
 cat /work/kit/TOOL_INVENTORY.md    # full tool/path/wordlist inventory
@@ -26,6 +28,3 @@ cat /work/kit/TOOL_INVENTORY.md    # full tool/path/wordlist inventory
 - Host = `172.17.0.1:9876` (Docker gateway; NOT 127.0.0.1)
 - Handshake headers: `Host: localhost:9876`, `Origin: http://localhost:9876`
 - `GET /` -> SSE `endpoint` event with `sessionId` -> `POST /?sessionId=<id>`
-
-## Security
-Repo is **private**. Treat the PAT as sensitive - revoke it after pushing.

@@ -115,7 +115,10 @@ fallbacks, and why running Claude Code on the **same host as Burp** (so
   (see `burp_client.py`, `BOOTPROMPT.txt` §2).
 - **Caido MCP** — `caido-mcp-server` (stdio, 67 tools): `caido_send_request`,
   `caido_batch_send` (50 parallel — BAC/IDOR sweeps), history, findings, scopes,
-  tamper. Great for fast iteration and when Burp is busy scanning.
+  tamper. Great for fast iteration and when Burp is busy scanning. Launched as
+  `caido-mcp-server serve` (see `.mcp.json`); authenticate once with
+  `caido-mcp-server login` (OAuth device flow) or set `CAIDO_ACCESS_TOKEN`
+  (7-day static token). Install/bootstrap via `bash install-caido.sh`.
 
 Rule of thumb: **automated discovery** with the CLI tools (§5), **manual
 confirmation** in the interceptor. Never submit a finding you only saw from a
@@ -162,39 +165,41 @@ reports): `bash tools/gen-skills.sh`.
 
 ## 5. TOOLS & PATHS (Kali container)
 
-Run once per session (also in `recon.sh`):
+Run once per session (also in `recon.sh`). **User dirs go first** so `~/go/bin/httpx`
+(ProjectDiscovery) wins over Kali's `/usr/bin/httpx` (a Python HTTP client):
 ```bash
-export PATH="$PATH:/root/go/bin:/usr/local/go/bin:/opt/venv/bin:/root/.local/bin"
+export PATH="$HOME/go/bin:$HOME/.local/bin:$HOME/.cargo/bin:/usr/local/bin:$PATH"
 ```
 
 **Build and install freely.** When a task needs a tool you don't have, install
-it (`go install …@latest`, `pipx install`, `git clone` into `/root/tools`) — and
+it (`go install …@latest`, `pipx install`, `git clone` into `~/tools`) — and
 when no tool fits, write one (small parsers, race harnesses, custom fuzzers,
-recon-chaining scripts; save under `/work/<target>/tools/`). Don't stop to ask
-for routine installs/builds inside this authorized container; just do it and note
+recon-chaining scripts; save under `./work/<target>/tools/`). Don't stop to ask
+for routine installs/builds inside this authorized box; just do it and note
 what you added.
 
-- **Go (`/root/go/bin`):** subfinder chaos uncover httpx katana naabu dnsx
+- **Go (`~/go/bin`):** subfinder chaos uncover httpx katana naabu dnsx
   shuffledns mapcidr cdncheck tlsx alterx asnmap interactsh-client nuclei amass
   assetfinder findomain haktrails puredns gau waybackurls getJS hakrawler
   gospider httprobe ffuf meg gron fff unfurl anew qsreplace gf Gxss kxss dalfox
-  crlfuzz gitleaks subzy cloudlist
+  crlfuzz gitleaks subzy cloudlist caido-mcp-server
 - **System (`/usr/bin`):** nmap masscan sqlmap whatweb wafw00f nikto wpscan
   massdns dig gobuster feroxbuster wfuzz dirsearch hydra commix msfconsole
   searchsploit enum4linux smbclient tshark hashcat exiftool httpie aws jadx
   apktool jq (john: `/usr/sbin/john`; dex2jar: `d2j-dex2jar.sh`)
-- **Python (`/opt/venv/bin`):** arjun paramspider uro waymore xsstrike dnsgen
+  — note: prefer `~/go/bin/httpx`, not `/usr/bin/httpx`; Kali's security build is `httpx-toolkit`
+- **Python (`~/.local/bin`, pipx):** arjun paramspider uro waymore xsstrike dnsgen
   bbot censys shodan + impacket (secretsdump/ntlmrelayx/getST/…) + pwntools +
   scapy + ldapdomaindump
 - **npm (`/usr/local/bin`):** js-beautify prettier esparse swagger-cli postman
   trufflehog
-- **Cloned repos (`/root/tools`):** Corsy Gopherus GraphQLmap LinkFinder
+- **Cloned repos (`~/tools`):** Corsy Gopherus GraphQLmap LinkFinder
   OpenRedireX ParamSpider Photon S3Scanner SecretFinder xnLinkFinder XSStrike
   jwt_tool reconftw axiom cloud_enum github-dorks can-i-take-over-xyz …
-- **Wordlists:** `/root/wordlists/{OneListForAll,PayloadsAllTheThings,fuzzdb}`,
+- **Wordlists:** `~/wordlists/{OneListForAll,PayloadsAllTheThings,fuzzdb}`,
   `/usr/share/seclists`, `/usr/share/wordlists/rockyou.txt.gz` (gunzip first),
   `/usr/share/dirb/wordlists`
-- **gf patterns (`/root/.gf`):** xss sqli ssrf ssti lfi rce redirect idor idor
+- **gf patterns (`~/.gf`):** xss sqli ssrf ssti lfi rce redirect idor
   img-traversal interestingparams/subs/EXT jsvar debug_logic
 
 Full inventory incl. API-key config: `TOOL_INVENTORY.md`. `recon.sh` prints a
@@ -230,3 +235,87 @@ EVIDENCE      = redact PII, timestamp everything, save raw req/res
    severity, no fabricated PoCs.
 
 These rules hold regardless of which model backs this session (see `ROUTER.md`).
+
+---
+
+## 8. ENFORCEMENT, MEMORY & OPENAPI (added)
+
+Scope (from §0/§7) is now backed by code — use it.
+
+### scope.py — enforce scope before every host
+```bash
+python3 scope.py add "*.target.com"        # in-scope
+python3 scope.py add "!dev.target.com"     # exclusion
+python3 scope.py check https://api.target.com/x   # exit 0 in-scope, 2 out
+cat hosts.txt | python3 scope.py filter    # keep only in-scope in a pipeline
+```
+Rule: before any request to a new host, run `scope.py check`; non-zero = do not touch. Wire it into recon.sh and any custom script.
+
+### state.py — dedup + cross-session memory
+```bash
+python3 state.py add-host sub.target.com
+python3 state.py add-endpoint https://target/api/v1/users GET 200
+python3 state.py finding IDOR https://target/api/orders id "peer order access"
+python3 state.py seen <signature>          # exit 0 if already recorded -> skip
+python3 state.py report <id> H1-123456
+python3 state.py new-since 2026-09-01
+python3 state.py stats
+```
+Rule: before writing up a candidate, run `state.py seen`; skip duplicates.
+
+### openapi-to-mcp skill
+On finding `/openapi.json`, `/swagger.json`, `/v3/api-docs` on an in-scope target, load the `openapi-to-mcp` skill: FastMCP exposes every endpoint as an MCP tool (traffic via Burp) so you can walk the API for BOLA/BFLA/mass-assignment with two accounts.
+
+### Model routing (hybrid)
+Default to Claude (Opus/Sonnet) — best reasoning, org Cyber Verification approval applies. DeepSeek "grinder" profile at `config/claude-deepseek-settings.json` (`claude --settings config/claude-deepseek-settings.json`) — bulk/low-reasoning only; keep exploitation, validation, and severity on Claude.
+
+---
+
+## 9. AUTONOMY, TOOL PATHS & GROWTH (added)
+
+### You may act autonomously (within scope + the hard rules)
+Within a confirmed scope you have standing permission to:
+- **Install tools** you need — `go install …`, `pipx install …` / `uv tool install …`, `npm i -g …`, `sudo apt-get install …`, or `git clone` into `~/tools`. If a skill needs a tool that's MISSING (see TOOL_INVENTORY.md), install it, then re-run `make-inventory.sh`.
+- **Write custom code/tooling** when no existing tool fits (bespoke signing, weird param formats, custom auth, business logic). Save reusable scripts under `tools/custom/<target>/`.
+- **Fetch tools and skills from the internet** when useful — clone a repo, pull a nuclei template set, adapt a public technique into a skill.
+
+Never let autonomy cross scope or the §7 hard rules. Ask before anything destructive.
+
+### Real tool paths on THIS host (not /root)
+Tools live under the user's home. Ensure PATH includes them (the launcher shell should export these):
+```bash
+export PATH="$PATH:$HOME/go/bin:$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.foundry/bin:/usr/local/bin:/usr/bin"
+export TOOLS="$HOME/tools"; export WORDLISTS="$HOME/wordlists"
+```
+`~/go/bin` (Go bins), `~/.local/bin` (pip/uv), `~/tools/<repo>` (cloned, run by path), `~/nuclei-templates`, `~/wordlists` + `/usr/share/seclists`. Full list + a verifier: `TOOL_INVENTORY.md` / `bash make-inventory.sh`.
+
+### Certificate Transparency: use crt.name (crt.sh is deprecated here)
+For CT-based subdomain discovery use **crt.name**, not crt.sh:
+```bash
+bash crtname.sh target.com | python3 scope.py filter | anew work/target/subs.txt
+```
+Endpoint: `https://crt.name/v1/search?apex=<domain>` (plain newline list). Fold it into every recon run alongside subfinder/amass.
+
+### Author skills as you hunt (get smarter every session)
+When you find a technique that works and isn't already covered, **capture it as a skill** — load the `skill-author` skill and:
+```bash
+bash new-skill.sh <slug> "<one-line description>"   # scaffolds + links it live
+```
+Fill `skills/learned-live/<slug>/SKILL.md` with the exact commands, the confirming response, escalation, validation, and impact. Run `/reload-skills`. Add a `ROUTER.md` / `CATEGORY_MAP.md` line if it generalises. Never put credentials, live tokens, or a target's private data in a skill — techniques only. Commit `skills/learned-live/` with the repo; over time it becomes your personal edge.
+
+### Recon pipeline & full procedure
+One-command scope-gated recon that builds the target workspace and logs to state.py:
+```bash
+python3 scope.py add "*.target.com"
+bash hunt.sh target.com --nuclei        # --ports for nmap, --shots for gowitness
+```
+The complete operating procedure — workspace setup, recon, hunting by severity
+(critical→low) with advanced methods, Burp/Caido use, dedup, validation, PoC,
+report, when to flag a human step, and the DeepSeek fallback — is in
+`HUNTING_RUNBOOK.md`. Follow it.
+
+### Stop and flag when a human is needed
+Creating/verifying accounts, solving CAPTCHAs, entering real credentials or 2FA,
+manual browser actions, submitting reports, and anything destructive or
+out-of-scope are the USER's to do. When you hit one, STOP and tell the user
+exactly what to do — never attempt it yourself.

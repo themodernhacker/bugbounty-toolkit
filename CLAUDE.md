@@ -113,8 +113,9 @@ fallbacks, and why running Claude Code on the **same host as Burp** (so
   native MCP handshake 403s (Origin/Host check from a different container),
   fall back to the proven client: `python3 burp_client.py <tool> [json]`
   (see `burp_client.py`, `BOOTPROMPT.txt` §2).
-- **Caido MCP** — lighter, fast HTTP history / replay / match-&-replace. Good
-  for quick iteration and when Burp is busy scanning.
+- **Caido MCP** — `caido-mcp-server` (stdio, 67 tools): `caido_send_request`,
+  `caido_batch_send` (50 parallel — BAC/IDOR sweeps), history, findings, scopes,
+  tamper. Great for fast iteration and when Burp is busy scanning.
 
 Rule of thumb: **automated discovery** with the CLI tools (§5), **manual
 confirmation** in the interceptor. Never submit a finding you only saw from a
@@ -122,16 +123,18 @@ scanner — replay it by hand first.
 
 ---
 
-## 4. SKILLS (329 playbooks — routing)
+## 4. SKILLS (357 playbooks — routing)
 
 Skills live in `skills/<collection>/<skill>/SKILL.md`, each with YAML
-frontmatter. Loading all 329 at once destroys context and skill selection, so:
+frontmatter. Loading them all at once destroys context and skill selection, so:
 
+- **Start from the category map.** `skills/CATEGORY_MAP.md` routes 100 bug
+  categories → the exact skill(s) to load, with scope flags. Use it to pick.
 - **Curated core (~42 skills)** are symlinked into `~/.claude/skills/` by
-  `link-skills.sh` and are always discoverable. These cover recon, the top web
-  vuln classes, validation, and reporting.
-- **Everything else (~290) is on-demand.** To find one, grep the generated
-  index (do NOT cat every file):
+  `link-skills.sh` and are always discoverable (recon, top vuln classes,
+  validation, reporting).
+- **Everything else is on-demand.** Grep the generated index (do NOT cat every
+  file):
 
   ```bash
   grep -i "<keyword>" skills/SKILL_INDEX.tsv        # name<TAB>collection<TAB>path<TAB>desc
@@ -140,17 +143,20 @@ frontmatter. Loading all 329 at once destroys context and skill selection, so:
 
 Collections: `claude-bughunter` (83, core hunt-* library), `agentic-bug-hunter`
 (15), `yaklang-hack-skills` (103, offensive deep-dives), `h1-disclosed-skills`
-(100, novel techniques from real disclosed reports — check these for dedupe and
-for exotic chains), `useosint` (29, OSINT/recon). Full map: `skills/README.md`.
-Long-form workflow: `skills/methodology/My Bug Hunting Methodology.md`.
+(100, specific disclosed CVE-chains), `hackerone-reports` (28 `h1-<class>`
+companions distilled from thousands of disclosed H1 reports — real payloads,
+bypasses, top-paid patterns per class), `useosint` (29, OSINT/recon). Full map:
+`skills/README.md`. Long-form workflow: `skills/methodology/My Bug Hunting Methodology.md`.
 
 **When to load a skill:** the moment a target matches its class. Testing a
-URL-fetch param → load `hunt-ssrf`. GraphQL endpoint → `hunt-graphql`. Reset
-flow → grep index for `forgot-password` / `2fa`. Don't hunt from memory when a
-playbook exists.
+URL-fetch param → `hunt-ssrf` **and** its companion `h1-ssrf` (disclosed-report
+patterns). GraphQL endpoint → `hunt-graphql` + `h1-graphql`. Reset flow → grep
+index for `forgot-password` / `2fa`. Rule: load the `hunt-*` playbook for method
+**plus** the `h1-<class>` companion for real-world patterns. Don't hunt from
+memory when a playbook exists.
 
-> NOTE: `skills/README.md` still lists an `anthropic-cybersecurity-skills` (818)
-> collection — that was **removed**. Ignore it; it's not on disk.
+**Regenerate the H1 companions** any time (they refresh from newly disclosed
+reports): `bash tools/gen-skills.sh`.
 
 ---
 
@@ -160,6 +166,13 @@ Run once per session (also in `recon.sh`):
 ```bash
 export PATH="$PATH:/root/go/bin:/usr/local/go/bin:/opt/venv/bin:/root/.local/bin"
 ```
+
+**Build and install freely.** When a task needs a tool you don't have, install
+it (`go install …@latest`, `pipx install`, `git clone` into `/root/tools`) — and
+when no tool fits, write one (small parsers, race harnesses, custom fuzzers,
+recon-chaining scripts; save under `/work/<target>/tools/`). Don't stop to ask
+for routine installs/builds inside this authorized container; just do it and note
+what you added.
 
 - **Go (`/root/go/bin`):** subfinder chaos uncover httpx katana naabu dnsx
   shuffledns mapcidr cdncheck tlsx alterx asnmap interactsh-client nuclei amass

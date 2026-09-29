@@ -2,3 +2,5 @@
 __pycache__/
 *.pyc
 *.html
+.h1src/
+skills/SKILL_INDEX.tsv

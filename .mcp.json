@@ -8,10 +8,9 @@
       }
     },
     "caido": {
-      "type": "sse",
-      "url": "http://127.0.0.1:8085/sse",
-      "headers": {
-        "Origin": "http://127.0.0.1:8085"
+      "command": "caido-mcp-server",
+      "env": {
+        "CAIDO_URL": "http://127.0.0.1:8080"
       }
     }
   }

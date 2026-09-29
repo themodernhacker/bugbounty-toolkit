@@ -18,9 +18,21 @@ skills/
 ├── yaklang-hack-skills/           # offensive hacking playbooks (103)
 ├── useosint/                      # OSINT / recon (29)
 ├── h1-disclosed-skills/          # 100 skills distilled from disclosed H1 reports
+├── hackerone-reports/             # 28 h1-<class> companions (generated, see below)
 ├── methodology/                   # My Bug Hunting Methodology.md
+├── CATEGORY_MAP.md                # 100 bug categories -> which skill to load
+├── SKILL_INDEX.tsv                # generated: grep this to find on-demand skills
 └── README.md
 ```
+
+Start with **`CATEGORY_MAP.md`** to route a bug class to the right skill.
+
+## hackerone-reports/  (28 skills, generated)  — from reddelexc/hackerone-reports
+`h1-<class>` companions (h1-xss, h1-ssrf, h1-idor, …) distilled from thousands of
+disclosed HackerOne reports: per class, the top-paid disclosed reports, patterns
+seen in the wild, and a hunting checklist. Load alongside the matching `hunt-*`
+skill. **Generated** — rebuild with `bash tools/gen-skills.sh` (not committed as
+source; `.h1src/` is the working clone).
 
 ## claude-bughunter/  (83 skills)  — elementalsouls/Claude-BugHunter
 hunt-{xss, sqli, ssrf, ssti, xxe, lfi, idor, csrf, cors, open-redirect, race-condition,

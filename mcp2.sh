@@ -2,7 +2,7 @@
 BASE="http://172.17.0.1:9876"
 HOST="localhost:9876"
 ORIGIN="http://localhost:9876"
-OUT=/work/sse.log
+OUT="${TMPDIR:-/tmp}/bbt-sse.log"
 rm -f "$OUT"
 
 # 1) Open SSE stream in background (long-lived)
@@ -13,6 +13,7 @@ sleep 1
 # 2) Extract session id
 SID=$(sed -n 's/.*sessionId=\([^&[:space:]]*\).*/\1/p' "$OUT" | head -1)
 echo "sessionId = $SID"
+[ -z "$SID" ] && { echo "no sessionId — is Burp MCP up on $BASE?"; kill $CURLPID 2>/dev/null; exit 1; }
 
 # 3) POST initialize
 echo "--- POST initialize ---"

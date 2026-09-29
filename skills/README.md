@@ -17,7 +17,6 @@ skills/
 ├── agentic-bug-hunter/            # hunt/web2/web3 skills (15)
 ├── yaklang-hack-skills/           # offensive hacking playbooks (103)
 ├── useosint/                      # OSINT / recon (29)
-├── anthropic-cybersecurity-skills/# comprehensive security library (818)
 ├── h1-disclosed-skills/          # 100 skills distilled from disclosed H1 reports
 ├── methodology/                   # My Bug Hunting Methodology.md
 └── README.md
@@ -61,12 +60,6 @@ OSINT & recon: recon-a-domain-passively, find-hidden-subdomains, find-exposed-se
 find-leaks-in-the-wild, google-like-a-spy, who-owns-this-domain, x-ray-a-company,
 secrets-in-git-history, secrets-in-file-metadata, dig-through-data-brokers, find-anyone,
 geolocate-from-pixels, pattern-of-life-from-socials, write-the-intel-brief, etc.
-
-## anthropic-cybersecurity-skills/  (818 skills)  — mukul975/anthropic-cybersecurity-skills
-Large curated security library spanning offensive testing (blind-ssrf, web vulns, AD
-abuse, privesc), DFIR/malware analysis, threat intel, cloud security, and compliance.
-See ATTACK_COVERAGE.md for the full map. Load the matching skill for the vuln class
-or environment you're testing.
 
 ## h1-disclosed-skills/  (100 skills)  — distilled from disclosed H1 reports
 Novel techniques from real Critical/High/Medium disclosed reports across XSS, SSRF,

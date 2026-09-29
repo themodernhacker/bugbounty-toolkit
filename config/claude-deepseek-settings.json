@@ -1,0 +1,8 @@
+{
+  "_note": "DeepSeek 'grinder' profile. Route Claude Code through claude-code-router (ccr) so this session talks to DeepSeek. See ROUTER.md section B for the ccr config. Use ONLY for bulk, low-reasoning grunt work (summarise crawl dumps, first-pass nuclei-JSON triage, cluster URLs); keep exploitation, validation and severity on Claude. The Cyber Verification approval does NOT apply to DeepSeek, and target data sent to api.deepseek.com leaves your machine.",
+  "env": {
+    "ANTHROPIC_BASE_URL": "http://127.0.0.1:3456",
+    "ANTHROPIC_API_KEY": "ccr-local"
+  },
+  "model": "deepseek,deepseek-chat"
+}

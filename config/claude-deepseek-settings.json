@@ -1,0 +1,11 @@
+{
+  "$comment": "DeepSeek 'grinder' profile for Claude Code. Launch with:  claude --settings config/claude-deepseek-settings.json   — routes Claude Code through DeepSeek's Anthropic-compatible endpoint instead of Anthropic. Use this ONLY for high-volume, low-reasoning grind (mass endpoint classification, first-pass JS skim). Keep exploitation, validation and severity calls on the default Claude profile.",
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://api.deepseek.com/anthropic",
+    "ANTHROPIC_AUTH_TOKEN": "REPLACE_WITH_DEEPSEEK_API_KEY",
+    "ANTHROPIC_MODEL": "deepseek-chat",
+    "ANTHROPIC_SMALL_FAST_MODEL": "deepseek-chat",
+    "$comment_model": "DeepSeek's official Claude Code guide uses 'deepseek-v4-pro[1m]' as the main model and 'deepseek-chat' as the general alias. If a 'flash'/V4.1 identifier is live when you set this up, confirm the exact model string at https://api-docs.deepseek.com and drop it into ANTHROPIC_MODEL. Claude Code validates --model against an Anthropic allowlist, so set the model HERE via env, not with --model deepseek-...",
+    "$comment_key": "Set ANTHROPIC_AUTH_TOKEN (not ANTHROPIC_API_KEY) to avoid Claude Code's key-conflict prompt. Never commit the real key."
+  }
+}

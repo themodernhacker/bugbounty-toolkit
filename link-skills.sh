@@ -67,6 +67,9 @@ CORE=(
   claude-bughunter/hunt-shadow-api
   claude-bughunter/hunt-cloud-misconfig
   claude-bughunter/hunt-k8s
+  # capability skills (top-level, not under a collection)
+  openapi-to-mcp
+  skill-author
 )
 
 build_index() {

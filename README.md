@@ -79,3 +79,12 @@ What Claude Code picks up automatically:
   `CAIDO_ACCESS_TOKEN` (7-day static — grab it in the Caido GUI console with
   `JSON.parse(localStorage.CAIDO_AUTHENTICATION).accessToken`).
 - Optional standalone CLI: `caido-cli status -u http://127.0.0.1:8080`.
+
+## Enforcement, memory & extras
+
+- `scope.py` — code-enforced in/out-of-scope guard (`check` / `filter` / `add`). Call before touching any host.
+- `state.py` — SQLite findings/host/endpoint store with dedup and `new-since` (cross-session memory).
+- `skills/openapi-to-mcp/` — turn a target's OpenAPI/Swagger spec into a live MCP toolset via FastMCP.
+- `config/claude-deepseek-settings.json` — optional DeepSeek "grinder" profile for Claude Code (`claude --settings ...`). Keep exploitation/validation on Claude.
+
+See `CLAUDE.md` §8 for usage.

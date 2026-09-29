@@ -4,3 +4,8 @@ __pycache__/
 *.html
 .h1src/
 skills/SKILL_INDEX.tsv
+scope.txt
+.bbstate.db
+*.env
+work/
+tools/custom/

@@ -134,4 +134,13 @@ clone https://github.com/six2dez/OneListForAll.git /root/wordlists/OneListForAll
 cp -n /root/tools/Gf-Patterns/*.json /root/.gf/ 2>/dev/null || true
 nuclei -update-templates 2>/dev/null || true
 
+# ---- BBT-ADDON: enforcement+fastmcp ---------------------------------------
+# FastMCP for the openapi-to-mcp skill (turn a target's OpenAPI spec into tools)
+pip install fastmcp httpx --break-system-packages 2>/dev/null || \
+  pip3 install fastmcp httpx --break-system-packages 2>/dev/null || true
+# scope.py / state.py are pure-Python (stdlib only) — just make them executable
+chmod +x scope.py state.py 2>/dev/null || true
+echo "[ok] fastmcp installed; scope.py/state.py ready"
+# ---------------------------------------------------------------------------
+
 echo "=== setup done $(date) ==="

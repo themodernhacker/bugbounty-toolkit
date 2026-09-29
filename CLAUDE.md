@@ -115,7 +115,10 @@ fallbacks, and why running Claude Code on the **same host as Burp** (so
   (see `burp_client.py`, `BOOTPROMPT.txt` §2).
 - **Caido MCP** — `caido-mcp-server` (stdio, 67 tools): `caido_send_request`,
   `caido_batch_send` (50 parallel — BAC/IDOR sweeps), history, findings, scopes,
-  tamper. Great for fast iteration and when Burp is busy scanning.
+  tamper. Great for fast iteration and when Burp is busy scanning. Launched as
+  `caido-mcp-server serve` (see `.mcp.json`); authenticate once with
+  `caido-mcp-server login` (OAuth device flow) or set `CAIDO_ACCESS_TOKEN`
+  (7-day static token). Install/bootstrap via `bash install-caido.sh`.
 
 Rule of thumb: **automated discovery** with the CLI tools (§5), **manual
 confirmation** in the interceptor. Never submit a finding you only saw from a

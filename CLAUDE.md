@@ -112,7 +112,7 @@ fallbacks, and why running Claude Code on the **same host as Burp** (so
   raw HTTP replay. Use for manual verification and OOB confirmation. If the
   native MCP handshake 403s (Origin/Host check from a different container),
   fall back to the proven client: `python3 burp_client.py <tool> [json]`
-  (see `burp_client.py`, `BOOTPROMPT.txt` §2).
+  (it does the SSE + sessionId + Host handshake itself; see `ROUTER.md` §C).
 - **Caido MCP** — `caido-mcp-server` (stdio, 67 tools): `caido_send_request`,
   `caido_batch_send` (50 parallel — BAC/IDOR sweeps), history, findings, scopes,
   tamper. Great for fast iteration and when Burp is busy scanning. Launched as
@@ -126,7 +126,7 @@ scanner — replay it by hand first.
 
 ---
 
-## 4. SKILLS (357 playbooks — routing)
+## 4. SKILLS (358 playbooks — routing)
 
 Skills live in `skills/<collection>/<skill>/SKILL.md`, each with YAML
 frontmatter. Loading them all at once destroys context and skill selection, so:

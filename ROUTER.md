@@ -5,23 +5,21 @@ Everything about *how the agent is driven and connected*. Read alongside
 
 ---
 
-## A. Which harness? (pentagi vs Claude Code vs build-your-own)
+## A. Which harness? (Claude Code vs build-your-own)
 
 Short version: **use Claude Code as the primary harness.** Reasons that matter
 for *this* toolkit:
 
 - Best-in-class agentic tool use — it drives the CLI tools, Burp/Caido MCP, and
-  your 329 skills reliably, with subagents for parallel recon.
+  this repo's skills library reliably, with subagents for parallel recon.
 - Native skills + this repo's `CLAUDE.md` give you the "think like a top
   researcher" loop without you building an orchestrator.
 - Your Cyber Verification approval (org `94f75d2d-…`) lifts the dual-use
   safeguards on **Anthropic models** for exactly this use case — so Claude Code
   is the supported, unblocked path.
 
-PentAGI is a fine autonomous framework, but you own its model quality and
-guardrails, and it won't use these skills natively. Keep it optional. Don't
-build your own orchestrator yet — you'd be re-implementing what Claude Code +
-subagents already give you.
+Don't build your own orchestrator yet — you'd be re-implementing what Claude
+Code + subagents already give you.
 
 **Recommended split brain:**
 - **Driver = Claude** (agentic hunting, MCP, skills, planning, validation).

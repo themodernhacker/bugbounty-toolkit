@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "burp": {
+      "type": "sse",
+      "url": "http://127.0.0.1:9876/",
+      "headers": {
+        "Origin": "http://127.0.0.1:9876"
+      }
+    },
+    "caido": {
+      "type": "sse",
+      "url": "http://127.0.0.1:8085/sse",
+      "headers": {
+        "Origin": "http://127.0.0.1:8085"
+      }
+    }
+  }
+}

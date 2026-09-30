@@ -32,32 +32,39 @@ class BurpMCP:
         req.add_header("Cache-Control", "no-cache")
         try:
             with urllib.request.urlopen(req, timeout=60) as r:
-                buf = ""
-                while not self._stop.is_set():
-                    chunk = r.read(1).decode(errors="replace")
-                    if not chunk:
+                ev = None
+                data_lines = []
+                # Iterate line-by-line: the response buffers internally, so we never
+                # re-scan the whole stream (the old read(1)+buf.replace loop was O(n^2)).
+                for raw in r:
+                    if self._stop.is_set():
                         break
-                    buf += chunk
-                    buf = buf.replace("\r\n", "\n")
-                    while "\n\n" in buf:
-                        block, buf = buf.split("\n\n", 1)
-                        ev = None; data = None
-                        for line in block.split("\n"):
-                            if line.startswith("event:"):
-                                ev = line[6:].strip()
-                            elif line.startswith("data:"):
-                                data = line[5:].strip()
-                        if ev == "endpoint" and data:
-                            self.sid = data.split("sessionId=")[-1].strip()
-                        elif ev == "message" and data:
-                            try:
-                                msg = json.loads(data)
-                                if "id" in msg:
-                                    self.responses[msg["id"]] = msg
-                            except Exception:
-                                pass
+                    line = raw.decode(errors="replace").rstrip("\r\n")
+                    if line == "":                       # blank line ends one SSE event
+                        self._dispatch(ev, "\n".join(data_lines))
+                        ev = None; data_lines = []
+                        continue
+                    if line.startswith("event:"):
+                        ev = line[6:].strip()
+                    elif line.startswith("data:"):
+                        data_lines.append(line[5:].strip())
+                if data_lines:                            # flush a trailing event, if any
+                    self._dispatch(ev, "\n".join(data_lines))
         except Exception:
             pass
+
+    def _dispatch(self, ev, data):
+        if not data:
+            return
+        if ev == "endpoint":
+            self.sid = data.split("sessionId=")[-1].strip()
+        elif ev == "message":
+            try:
+                msg = json.loads(data)
+                if "id" in msg:
+                    self.responses[msg["id"]] = msg
+            except Exception:
+                pass
 
     def connect(self):
         t = threading.Thread(target=self._read_sse, daemon=True)

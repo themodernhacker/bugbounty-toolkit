@@ -19,6 +19,11 @@ from urllib.parse import urlparse
 
 SCOPE_FILE = os.environ.get("BB_SCOPE", "scope.txt")
 
+# a syntactically valid DNS hostname (labels of a-z0-9/-, at least one dot, <=253 chars)
+HOST_RE = re.compile(
+    r"^(?=.{1,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
+)
+
 
 def host_of(s):
     s = s.strip()
@@ -91,9 +96,25 @@ def main():
             if in_scope(line):
                 sys.stdout.write(line)
     elif cmd == "add":
+        raw = sys.argv[2].strip()
+        neg = raw.startswith("!")
+        body = raw[1:].strip() if neg else raw
+        # accept a CIDR, a *.wildcard, or a plain host/apex; normalise + validate
+        rule = None
+        try:
+            ipaddress.ip_network(body, strict=False)
+            rule = body                                   # valid CIDR, keep verbatim
+        except ValueError:
+            wild = body.startswith("*.")
+            h = host_of(body[2:] if wild else body)       # URL -> host, lowercased
+            if h and HOST_RE.match(h):
+                rule = ("*." + h) if wild else h
+        if not rule:
+            sys.exit(f"not a valid host/CIDR/wildcard: {raw}")
+        out = ("!" + rule) if neg else rule
         with open(SCOPE_FILE, "a") as f:
-            f.write(sys.argv[2].strip() + "\n")
-        print(f"added to {SCOPE_FILE}: {sys.argv[2].strip()}")
+            f.write(out + "\n")
+        print(f"added to {SCOPE_FILE}: {out}")
     else:
         print(__doc__); sys.exit(1)
 

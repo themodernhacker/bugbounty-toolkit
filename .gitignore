@@ -9,3 +9,8 @@ scope.txt
 *.env
 work/
 tools/custom/
+config/*secret*
+config/*.local.json
+*.tokens
+.github_tokens
+.gitlab_tokens

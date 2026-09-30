@@ -71,6 +71,16 @@ def main():
     elif cmd == "add-param":
         c.execute("INSERT OR IGNORE INTO params VALUES(?,?,?)",
                   (sys.argv[2], sys.argv[3], now()))
+    elif cmd == "add-hosts-stdin":                       # bulk: one process for N hosts
+        rows = [(h, now()) for h in (l.strip() for l in sys.stdin) if h]
+        c.executemany("INSERT OR IGNORE INTO hosts VALUES(?,?)", rows)
+        print(f"added/ignored {len(rows)} hosts")
+    elif cmd == "add-endpoints-stdin":                   # bulk: URLs on stdin, one method/status
+        method = sys.argv[2] if len(sys.argv) > 2 else "GET"
+        status = int(sys.argv[3]) if len(sys.argv) > 3 else 0
+        rows = [(u, method, status, now()) for u in (l.strip() for l in sys.stdin) if u]
+        c.executemany("INSERT OR IGNORE INTO endpoints VALUES(?,?,?,?)", rows)
+        print(f"added/ignored {len(rows)} endpoints")
     elif cmd == "seen":
         s = sys.argv[2]
         row = c.execute("SELECT 1 FROM findings WHERE sig=?", (s,)).fetchone()

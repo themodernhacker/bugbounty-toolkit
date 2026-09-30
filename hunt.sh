@@ -61,7 +61,7 @@ else
 fi
 echo "     $(wc -l < "$W/live-hosts.txt") live hosts"
 # log hosts to state
-while read -r h; do python3 state.py add-host "$h" >/dev/null 2>&1; done < "$W/live-hosts.txt"
+python3 state.py add-hosts-stdin < "$W/live-hosts.txt" >/dev/null 2>&1 || true
 
 # 3) URL / endpoint collection -------------------------------------------------
 echo "[3/6] crawl + historical URLs"
@@ -87,7 +87,7 @@ if have gf; then
 fi
 # log endpoints with params
 grep -E '\?[a-zA-Z0-9_]+=' "$W/urls.txt" | sort -u > "$W/params.txt" || true
-while read -r u; do python3 state.py add-endpoint "$u" GET 0 >/dev/null 2>&1; done < <(head -500 "$W/params.txt")
+head -500 "$W/params.txt" | python3 state.py add-endpoints-stdin GET 0 >/dev/null 2>&1 || true
 echo "     $(wc -l < "$W/js.txt") JS files, $(wc -l < "$W/params.txt") param URLs"
 
 # 5) OPTIONAL: nmap service scan (louder) --------------------------------------

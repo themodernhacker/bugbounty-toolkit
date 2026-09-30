@@ -10,4 +10,4 @@
 set -euo pipefail
 apex="${1:?usage: crtname.sh <apex-domain>}"
 curl -s --max-time 30 "https://crt.name/v1/search?apex=${apex}" \
-  | tr 'A-Z' 'a-z' | grep -E "\.?${apex//./\\.}$" | sort -u
+  | tr 'A-Z' 'a-z' | grep -E "(^|\.)${apex//./\\.}$" | sort -u

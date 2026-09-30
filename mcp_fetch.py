@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-import sys, json, re
-sys.path.insert(0, '/work')
+import sys, json, re, os
+# Import burp_client from this script's own directory, wherever the repo lives.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from burp_client import BurpMCP
 
 HOST = "ginandjuice.shop"
@@ -41,7 +42,8 @@ def fetch(path, extra_headers=None):
 
 if __name__ == "__main__":
     path = sys.argv[1] if len(sys.argv) > 1 else "/vulnerabilities"
-    out = sys.argv[2] if len(sys.argv) > 2 else "/work/last_body.html"
+    # default: last_body.html in the current dir (git-ignored), overridable via arg or $BB_OUT
+    out = sys.argv[2] if len(sys.argv) > 2 else os.environ.get("BB_OUT", "last_body.html")
     info, raw = fetch(path)
     if info is None:
         print("RAW:", json.dumps(raw)[:2000])
